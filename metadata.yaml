@@ -1,0 +1,5 @@
+homepage: "https://www.luratic.com"
+documentation: "https://www.luratic.com/posts/templates/tags/clarity/"
+versions:
+  - sha: 0cfc4633817932f067ec730451ef3d47efea1c17
+    changeNotes: Initial release

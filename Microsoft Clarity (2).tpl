@@ -11,7 +11,7 @@ ___INFO___
 {
   "displayName": "Microsoft Clarity",
   "categories": [
-    "ANALYTICS", "HEAT_MAP", "SESSION_RECORDING"
+    "ADVERTISING"
   ],
   "description": "This is an unofficial Google Tag Manager template for Microsoft Clarity.\nClariy, a behavioral analysis tool that helps you understand user experience, to make your website work better..",
   "securityGroups": [],

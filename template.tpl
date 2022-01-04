@@ -11,16 +11,18 @@ ___INFO___
 {
   "displayName": "Microsoft Clarity",
   "categories": [
-    "ANALYTICS", "HEAT_MAP", "SESSION_RECORDING"
+    "ANALYTICS",
+    "HEAT_MAP",
+    "SESSION_RECORDING"
   ],
-  "description": "This is an unofficial Google Tag Manager template for Microsoft Clarity.\nClariy, a behavioral analysis tool that helps you understand user experience, to make your website work better..",
+  "description": "This is an unofficial Google Tag Manager template for Microsoft Clarity and has the following improvements:\n- Custom Tags\n- Cookie Consent\n- Custom identifiers\n- Upgrade Sessions\n- Fix GA4",
   "securityGroups": [],
   "id": "cvt_temp_public_id",
   "type": "TAG",
   "version": 1,
   "brand": {
-    "displayName": "Custom template created by Luratic",
-    "id": "brand_dummy",
+    "displayName": "luratic",
+    "id": "github.com_luratic",
     "thumbnail": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAARVBMVEXwUSV/u0IyoNr9uBP////vRgz4u7HK4bd4uDWz1u7+4K4gnNj9tQD4uK3I4LSw1O7vOgBytSX84d3n8d/e7ff/8dwAl9fP6I05AAABIUlEQVR4nO3PRw7CQBAAwQGcjQPx/0/lynLkMNJa1R9oVURSbdd81w+npLKAhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISHFLZJ7UshXG9DUtEltdwL4WPtk4rm6BHWH2H9EdYfYf0R1h9h/cWY1PYsvq8pq5iTem+FcLpmFeek5vFHeEmKkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJDw/z45r46NoCOtpQAAAABJRU5ErkJggg\u003d\u003d"
   },
   "containerContexts": [
@@ -41,14 +43,224 @@ ___TEMPLATE_PARAMETERS___
         "type": "NON_EMPTY"
       }
     ],
-    "displayName": "Account id:",
-    "help": "Your Clarifity id.",
+    "displayName": "Clarity Project Id:",
+    "help": "You can find it in the project Url from the browser. Example: https://clarity.microsoft.com/projects/view/\u003cb\u003e\"projectId\"\u003c/b\u003e/",
     "valueHint": "44uxxx69x5"
   },
   {
-    "type": "LABEL",
+    "type": "GROUP",
+    "name": "advanced_options",
+    "displayName": "Advanced Options",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "add_custom_tags",
+        "checkboxText": "Add custom tags",
+        "simpleValueType": true,
+        "help": "You may want to track things that are specific to your site or user experience. With custom tags, you can apply arbitrary tags to your Clarity session. It will appear in the Filters options.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#add-custom-tags\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "SIMPLE_TABLE",
+            "name": "custom_tags",
+            "displayName": "Custom Tags",
+            "simpleTableColumns": [
+              {
+                "defaultValue": "",
+                "displayName": "key",
+                "name": "key",
+                "type": "TEXT",
+                "isUnique": true,
+                "valueHint": "page"
+              },
+              {
+                "defaultValue": "",
+                "displayName": "value",
+                "name": "value",
+                "type": "TEXT",
+                "valueHint": "checkout"
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_tags",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "consent",
+        "checkboxText": "Specify if cookies should be set",
+        "simpleValueType": true,
+        "help": "If your project is configured to require the consent of cookies you have to check this option.\nIf you use Google Consent Mode to manage cookies, it will work automatically once this option is checked. \n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/cookie-consent\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "menu_cookies",
+            "displayName": "",
+            "macrosInSelect": false,
+            "selectItems": [
+              {
+                "value": "consent_mode",
+                "displayValue": "Consent Mode"
+              },
+              {
+                "value": "has_custom_cookie_variable",
+                "displayValue": "Custom Cookie Variable"
+              }
+            ],
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "consent",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "subParams": [
+              {
+                "type": "SELECT",
+                "name": "custom_cookie_variable",
+                "displayName": "Cookie Custom Variable",
+                "macrosInSelect": true,
+                "selectItems": [
+                  {
+                    "value": true,
+                    "displayValue": "true"
+                  },
+                  {
+                    "value": false,
+                    "displayValue": "false"
+                  }
+                ],
+                "simpleValueType": true,
+                "enablingConditions": [
+                  {
+                    "paramName": "menu_cookies",
+                    "paramValue": "has_custom_cookie_variable",
+                    "type": "EQUALS"
+                  }
+                ]
+              }
+            ],
+            "help": ""
+          }
+        ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "add_custom_identifiers",
+        "checkboxText": "Customize your identifiers",
+        "simpleValueType": true,
+        "help": "Clarity automatically generates various types of identifiers needed for its normal functioning. However, you can assign other names for user id, session id, and page id if you want to have custom features on your site that requires it.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "TEXT",
+            "name": "user_id",
+            "displayName": "User id",
+            "simpleValueType": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "myuserid"
+          },
+          {
+            "type": "TEXT",
+            "name": "session_id",
+            "displayName": "Session id",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "mysessionid"
+          },
+          {
+            "type": "TEXT",
+            "name": "page_id",
+            "displayName": "Page id",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "mypageid"
+          }
+        ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "upgrade_sessions",
+        "checkboxText": "Prioritize specific sessions for recording",
+        "simpleValueType": true,
+        "help": "Clarity records up to \u003cb\u003e100,000 sessions per project per day \u003c/b\u003e. If your project’s total volume of sessions exceeds the maximum daily limit, some sessions will be throttled for playback. By default, Clarity will use rules to capture the most interesting sessions for its recordings.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "TEXT",
+            "name": "upgrade_reason",
+            "displayName": "Upgrade reason",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "upgrade_sessions",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "button click"
+          }
+        ]
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "fix_ga4",
+        "checkboxText": "Fix GA4 integration",
+        "simpleValueType": true,
+        "help": "Fix the ga4 integration problem and send Clarity event to the dataLayer. \u003c/br\u003e\nAfterwards, you would have to manually configure in GTM."
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
     "name": "info",
-    "displayName": "\u003ca href\u003d\"https://www.luratic.com/posts/templates/tags/clarity/\"\u003eDocumentation\u003c/a\u003e"
+    "displayName": "Information",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "LABEL",
+        "name": "info_web",
+        "displayName": "\u003cstrong\u003e\u003ca href\u003d\"https://www.luratic.com/posts/templates/tags/clarity/\"\u003eDocumentation\u003c/a\u003e\u003c/strong\u003e"
+      },
+      {
+        "type": "LABEL",
+        "name": "community",
+        "displayName": "\u003cstrong\u003e\u003ca href\u003d\"https://links.datola.es/datola_clarity\"\u003eCommunity 📊\u003c/a\u003e\u003c/strong\u003e"
+      },
+      {
+        "type": "LABEL",
+        "name": "clarity",
+        "displayName": "\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/\"\u003eMicrosoft Clarity\u003c/a\u003e"
+      }
+    ]
   }
 ]
 
@@ -58,15 +270,69 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 const injectScript = require('injectScript');
 const createArgumentsQueue = require('createArgumentsQueue');
 const encodeUriComponent = require('encodeUriComponent');
+const isConsentGranted = require('isConsentGranted');
+const addConsentListener = require('addConsentListener');
 
 //const log = require('logToConsole');
 //log("data", data);
 
+const fixGa4 = data.fix_ga4;
+const addCustomTags = data.add_custom_tags;
+const addCustomIdentifiers = data.add_custom_identifiers;
+const upgradeSessions = data.upgrade_sessions;
+const consent = data.consent; 
 const id = encodeUriComponent(data.id);
 const trackingUrl = 'https://www.clarity.ms/tag/' + id ;
 
-createArgumentsQueue('clarity', 'clarity.q');
-injectScript(trackingUrl, data.gtmOnSuccess, data.gtmOnFailure);
+const clarity = createArgumentsQueue('clarity', 'clarity.q');
+
+
+if (fixGa4) {
+  const gtag = createArgumentsQueue('gtag', 'dataLayer');
+}
+
+if ( addCustomIdentifiers) {
+  const userId = data.user_id;
+  const sessionId = data.user_id;
+  const pageId = data.page_id;  
+  clarity("identify", userId, sessionId, pageId);
+}
+
+if(addCustomTags) {
+  var customTags = data.custom_tags || [];
+  for (var i=0; i < customTags.length; i++) {
+    clarity('set', customTags[i].key, customTags[i].value);
+  }
+}
+
+if(upgradeSessions) {
+  const upgradeReason = data.upgrade_reason;
+  clarity('upgrade', upgradeReason);
+}
+
+if (consent) {
+  const hasCustomConsent = data.has_custom_consent;
+  const optionConsent = data.menu_cookies;
+  if(optionConsent === 'has_custom_cookie_variable') {
+    const customCookieVariable = data.custom_cookie_variable;
+    if(customCookieVariable) {
+      clarity('consent');
+    }
+  }
+  else {
+    if (isConsentGranted('analytics_storage')) {
+      clarity('consent'); 
+    }
+    addConsentListener('analytics_storage', (consentType, granted) => {
+      if(granted) {
+        clarity('consent'); 
+      }
+    });
+  }
+
+}
+
+injectScript(trackingUrl, data.gtmOnSuccess, data.gtmOnFailure, 'clarity');
 
 
 ___WEB_PERMISSIONS___
@@ -187,6 +453,137 @@ ___WEB_PERMISSIONS___
                     "boolean": true
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "gtag"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "dataLayer"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_consent",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "consentTypes",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "analytics_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
               }
             ]
           }
@@ -234,9 +631,9 @@ ___NOTES___
 
 Developed with ❤ by: Alfonso, Txema and Brais.
 Web: www.luratic.com
-Linkedin: 
-https://www.linkedin.com/in/braiscalvo/
+RRSS: 
+https://www.linkedin.com/in/braiscalvo/ | https://twitter.com/braiscv
 https://www.linkedin.com/in/alfonsorc/
-https://www.linkedin.com/in/txema-s%C3%A1nchez-a48482ba/
+https://www.linkedin.com/in/txemasm/
 
 

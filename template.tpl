@@ -15,7 +15,7 @@ ___INFO___
     "HEAT_MAP",
     "SESSION_RECORDING"
   ],
-  "description": "This is an unofficial Google Tag Manager template for Microsoft Clarity and has the following improvements:\n- Custom Tags\n- Cookie Consent\n- Custom identifiers\n- Upgrade Sessions\n- Fix GA4",
+  "description": "This is an unofficial Google Tag Manager template for Microsoft Clarity and has the following improvements:\n● Custom Events\n● Custom Tags\n● Custom Identifiers\n● Cookie Consent\n● Upgrade Sessions",
   "securityGroups": [],
   "id": "cvt_temp_public_id",
   "type": "TAG",
@@ -45,18 +45,50 @@ ___TEMPLATE_PARAMETERS___
     ],
     "displayName": "Clarity Project Id:",
     "help": "You can find it in the project Url from the browser. Example: https://clarity.microsoft.com/projects/view/\u003cb\u003e\"projectId\"\u003c/b\u003e/",
-    "valueHint": "44uxxx69x5"
+    "valueHint": "44uxxx69x5",
+    "alwaysInSummary": true
   },
   {
     "type": "GROUP",
     "name": "advanced_options",
     "displayName": "Advanced Options",
-    "groupStyle": "ZIPPY_CLOSED",
+    "groupStyle": "ZIPPY_OPEN_ON_PARAM",
     "subParams": [
       {
         "type": "CHECKBOX",
+        "name": "add_custom_events",
+        "checkboxText": "Add Custom Events",
+        "simpleValueType": true,
+        "help": "Track user actions manually. Each event is logged individually and can be filtered.\u003c/br\u003e\n\u003ca href\u003d\" Each event is logged individually and can be filtered.\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "TEXT",
+            "name": "event_name",
+            "displayName": "Event Name",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_events",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "alwaysInSummary": true,
+            "help": "",
+            "valueHint": "login",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "alwaysInSummary": false
+      },
+      {
+        "type": "CHECKBOX",
         "name": "add_custom_tags",
-        "checkboxText": "Add custom tags",
+        "checkboxText": "Add Custom Tags",
         "simpleValueType": true,
         "help": "You may want to track things that are specific to your site or user experience. With custom tags, you can apply arbitrary tags to your Clarity session. It will appear in the Filters options.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#add-custom-tags\"\u003eMore info\u003c/a\u003e",
         "subParams": [
@@ -71,14 +103,24 @@ ___TEMPLATE_PARAMETERS___
                 "name": "key",
                 "type": "TEXT",
                 "isUnique": true,
-                "valueHint": "page"
+                "valueHint": "page",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ]
               },
               {
                 "defaultValue": "",
                 "displayName": "value",
                 "name": "value",
                 "type": "TEXT",
-                "valueHint": "checkout"
+                "valueHint": "checkout",
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ]
               }
             ],
             "enablingConditions": [
@@ -87,10 +129,90 @@ ___TEMPLATE_PARAMETERS___
                 "paramValue": true,
                 "type": "EQUALS"
               }
-            ]
+            ],
+            "valueValidators": []
+          }
+        ],
+        "alwaysInSummary": false
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "add_custom_identifiers",
+        "checkboxText": "Add Custom Identifiers",
+        "simpleValueType": true,
+        "help": "Clarity automatically generates various types of identifiers needed for its normal functioning. However, you can assign other names for user id, session id, and page id if you want to have custom features on your site that requires it.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
+        "subParams": [
+          {
+            "type": "TEXT",
+            "name": "user_id",
+            "displayName": "User ID",
+            "simpleValueType": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ],
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "monakane@contoso.com"
+          },
+          {
+            "type": "TEXT",
+            "name": "session_id",
+            "displayName": "Session ID",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "custom-session-123"
+          },
+          {
+            "type": "TEXT",
+            "name": "page_id",
+            "displayName": "Page ID",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "custom-page-123"
+          },
+          {
+            "type": "TEXT",
+            "name": "friendly_name",
+            "displayName": "Friendly Name",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "add_custom_identifiers",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ],
+            "valueHint": "Mona"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "privacy",
+    "displayName": "Privacy",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
       {
         "type": "CHECKBOX",
         "name": "consent",
@@ -150,69 +272,21 @@ ___TEMPLATE_PARAMETERS___
             "help": ""
           }
         ]
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "add_custom_identifiers",
-        "checkboxText": "Customize your identifiers",
-        "simpleValueType": true,
-        "help": "Clarity automatically generates various types of identifiers needed for its normal functioning. However, you can assign other names for user id, session id, and page id if you want to have custom features on your site that requires it.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
-        "subParams": [
-          {
-            "type": "TEXT",
-            "name": "user_id",
-            "displayName": "User id",
-            "simpleValueType": true,
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              }
-            ],
-            "enablingConditions": [
-              {
-                "paramName": "add_custom_identifiers",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "valueHint": "myuserid"
-          },
-          {
-            "type": "TEXT",
-            "name": "session_id",
-            "displayName": "Session id",
-            "simpleValueType": true,
-            "enablingConditions": [
-              {
-                "paramName": "add_custom_identifiers",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "valueHint": "mysessionid"
-          },
-          {
-            "type": "TEXT",
-            "name": "page_id",
-            "displayName": "Page id",
-            "simpleValueType": true,
-            "enablingConditions": [
-              {
-                "paramName": "add_custom_identifiers",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "valueHint": "mypageid"
-          }
-        ]
-      },
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "options",
+    "displayName": "More Settings",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
       {
         "type": "CHECKBOX",
         "name": "upgrade_sessions",
         "checkboxText": "Prioritize specific sessions for recording",
         "simpleValueType": true,
-        "help": "Clarity records up to \u003cb\u003e100,000 sessions per project per day \u003c/b\u003e. If your project’s total volume of sessions exceeds the maximum daily limit, some sessions will be throttled for playback. By default, Clarity will use rules to capture the most interesting sessions for its recordings.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
+        "help": "Clarity records up to \u003cb\u003e100,000 sessions per project per day \u003c/b\u003e. If your project’s total volume of sessions exceeds the maximum daily limit, some sessions will be throttled for playback. \u003c/br\u003e By default, Clarity will use rules to capture the most interesting sessions for its recordings.\n\u003c/br\u003e\n\u003ca href\u003d\"https://docs.microsoft.com/en-us/clarity/clarity-api#prioritize-specific-sessions-for-recording\"\u003eMore info\u003c/a\u003e",
         "subParams": [
           {
             "type": "TEXT",
@@ -229,13 +303,6 @@ ___TEMPLATE_PARAMETERS___
             "valueHint": "button click"
           }
         ]
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "fix_ga4",
-        "checkboxText": "Fix GA4 integration",
-        "simpleValueType": true,
-        "help": "Fix the ga4 integration problem and send Clarity event to the dataLayer. \u003c/br\u003e\nAfterwards, you would have to manually configure in GTM."
       }
     ]
   },
@@ -243,17 +310,12 @@ ___TEMPLATE_PARAMETERS___
     "type": "GROUP",
     "name": "info",
     "displayName": "Information",
-    "groupStyle": "ZIPPY_OPEN",
+    "groupStyle": "ZIPPY_CLOSED",
     "subParams": [
       {
         "type": "LABEL",
-        "name": "info_web",
-        "displayName": "\u003cstrong\u003e\u003ca href\u003d\"https://www.luratic.com/posts/templates/tags/clarity/\"\u003eDocumentation\u003c/a\u003e\u003c/strong\u003e"
-      },
-      {
-        "type": "LABEL",
         "name": "community",
-        "displayName": "\u003cstrong\u003e\u003ca href\u003d\"https://links.datola.es/datola_clarity\"\u003eCommunity 📊\u003c/a\u003e\u003c/strong\u003e"
+        "displayName": "\u003cstrong\u003e\u003ca href\u003d\"https://datola.es/?utm_source\u003dgtm\u0026utm_medium\u003dtemplates\u0026utm_campaign\u003dclarity\"\u003eDatola | Community 📊\u003c/a\u003e\u003c/strong\u003e"
       },
       {
         "type": "LABEL",
@@ -276,7 +338,7 @@ const addConsentListener = require('addConsentListener');
 //const log = require('logToConsole');
 //log("data", data);
 
-const fixGa4 = data.fix_ga4;
+const addCustomEvents = data.add_custom_events;
 const addCustomTags = data.add_custom_tags;
 const addCustomIdentifiers = data.add_custom_identifiers;
 const upgradeSessions = data.upgrade_sessions;
@@ -287,20 +349,25 @@ const trackingUrl = 'https://www.clarity.ms/tag/' + id ;
 const clarity = createArgumentsQueue('clarity', 'clarity.q');
 
 
-if (fixGa4) {
-  const gtag = createArgumentsQueue('gtag', 'dataLayer');
+if (addCustomEvents) {
+  const eventName = data.event_name;
+  // log("event", eventName);
+  clarity("event", eventName);
 }
 
-if ( addCustomIdentifiers) {
+if (addCustomIdentifiers) {
   const userId = data.user_id;
-  const sessionId = data.user_id;
-  const pageId = data.page_id;  
-  clarity("identify", userId, sessionId, pageId);
+  const sessionId = data.session_id;
+  const pageId = data.page_id;
+  const friendlyName = data.friendly_name;    
+  //log("identify", userId, sessionId, pageId, friendlyName);
+  clarity("identify", userId, sessionId, pageId, friendlyName);
 }
 
 if(addCustomTags) {
   var customTags = data.custom_tags || [];
   for (var i=0; i < customTags.length; i++) {
+    //log("set", customTags[i].key, customTags[i].value);
     clarity('set', customTags[i].key, customTags[i].value);
   }
 }
@@ -631,6 +698,7 @@ ___NOTES___
 
 Developed with ❤ by: Alfonso, Txema and Brais.
 Web: www.luratic.com
+Web: www.datola.es
 RRSS: 
 https://www.linkedin.com/in/braiscalvo/ | https://twitter.com/braiscv
 https://www.linkedin.com/in/alfonsorc/

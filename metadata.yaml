@@ -2,9 +2,11 @@ homepage: "https://www.luratic.com"
 documentation: "https://www.luratic.com/posts/templates/tags/clarity/"
 versions:
   # Latest version
+  - sha: 3da4796182695ac9f552527210a93ca74b8e9fd4
+    changeNotes: Adapted to consentv2, improved Consent Mode and cookies compatibility, remove logs and minor usability enhancements.
+  # Older versions
   - sha: 8dd801c0eea200fdb77392270e426e366ae010de
     changeNotes: Adapted to consentv2, improved Consent Mode and cookies compatibility, and minor usability enhancements.
-  # Older versions
   - sha: def574733844b5b3808431c6e5511e30e290311e
     changeNotes: Added support for custom events, made minor improvements to the Clarity API and improved design.
   - sha: f96c8efe35305ceb52d723bc6d50976f7055b065

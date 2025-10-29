@@ -201,7 +201,8 @@ ___TEMPLATE_PARAMETERS___
                 "type": "EQUALS"
               }
             ],
-            "valueHint": "Mona"
+            "valueHint": "Mona",
+            "help": "Note: If both Friendly Name and User ID are set, Friendly Name will replace the User ID."
           }
         ]
       }
@@ -211,7 +212,7 @@ ___TEMPLATE_PARAMETERS___
     "type": "GROUP",
     "name": "privacy",
     "displayName": "Privacy",
-    "groupStyle": "ZIPPY_CLOSED",
+    "groupStyle": "ZIPPY_OPEN_ON_PARAM",
     "subParams": [
       {
         "type": "CHECKBOX",
@@ -232,7 +233,7 @@ ___TEMPLATE_PARAMETERS___
               },
               {
                 "value": "has_custom_cookie_variable",
-                "displayValue": "Custom Cookie Variable"
+                "displayValue": "Custom Consent Values"
               }
             ],
             "simpleValueType": true,
@@ -246,17 +247,17 @@ ___TEMPLATE_PARAMETERS___
             "subParams": [
               {
                 "type": "SELECT",
-                "name": "custom_cookie_variable",
-                "displayName": "Cookie Custom Variable",
+                "name": "analytics_storage",
+                "displayName": "Analytics (analytics_storage)",
                 "macrosInSelect": true,
                 "selectItems": [
                   {
-                    "value": true,
-                    "displayValue": "true"
+                    "value": "granted",
+                    "displayValue": "granted"
                   },
                   {
-                    "value": false,
-                    "displayValue": "false"
+                    "value": "denied",
+                    "displayValue": "denied"
                   }
                 ],
                 "simpleValueType": true,
@@ -265,6 +266,40 @@ ___TEMPLATE_PARAMETERS___
                     "paramName": "menu_cookies",
                     "paramValue": "has_custom_cookie_variable",
                     "type": "EQUALS"
+                  }
+                ],
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
+                  }
+                ]
+              },
+              {
+                "type": "SELECT",
+                "name": "ad_storage",
+                "displayName": "Advertising (ad_storage)",
+                "macrosInSelect": true,
+                "selectItems": [
+                  {
+                    "value": "granted",
+                    "displayValue": "granted"
+                  },
+                  {
+                    "value": "denied",
+                    "displayValue": "denied"
+                  }
+                ],
+                "simpleValueType": true,
+                "enablingConditions": [
+                  {
+                    "paramName": "menu_cookies",
+                    "paramValue": "has_custom_cookie_variable",
+                    "type": "EQUALS"
+                  }
+                ],
+                "valueValidators": [
+                  {
+                    "type": "NON_EMPTY"
                   }
                 ]
               }
@@ -335,8 +370,8 @@ const encodeUriComponent = require('encodeUriComponent');
 const isConsentGranted = require('isConsentGranted');
 const addConsentListener = require('addConsentListener');
 
-//const log = require('logToConsole');
-//log("data", data);
+const log = require('logToConsole');
+log("data", data);
 
 const addCustomEvents = data.add_custom_events;
 const addCustomTags = data.add_custom_tags;
@@ -381,22 +416,30 @@ if (consent) {
   const hasCustomConsent = data.has_custom_consent;
   const optionConsent = data.menu_cookies;
   if(optionConsent === 'has_custom_cookie_variable') {
-    const customCookieVariable = data.custom_cookie_variable;
-    if(customCookieVariable) {
-      clarity('consent');
-    }
-  }
-  else {
-    if (isConsentGranted('analytics_storage')) {
-      clarity('consent'); 
-    }
-    addConsentListener('analytics_storage', (consentType, granted) => {
-      if(granted) {
-        clarity('consent'); 
-      }
+    log("consentv2_manual","publi:",data.ad_storage,"analitica",data.analytics_storage);
+    clarity('consentv2', { 
+      ad_Storage: data.ad_storage, 
+      analytics_Storage: data.analytics_storage 
     });
   }
+  else {
+    // Usar arrow function
+    const updateClarityConsent = () => {
+      log("consentv2_auto","publi:",isConsentGranted('ad_storage'),"analitica",isConsentGranted('analytics_storage'));
 
+      clarity('consentv2', {
+        ad_Storage: isConsentGranted('ad_storage') ? 'granted' : 'denied',
+        analytics_Storage: isConsentGranted('analytics_storage') ? 'granted' : 'denied'
+      });
+    };
+
+    // Llamada inicial
+    updateClarityConsent();
+
+    // Listeners para cambios
+    addConsentListener('analytics_storage', () => updateClarityConsent());
+    addConsentListener('ad_storage', () => updateClarityConsent());
+  }
 }
 
 injectScript(trackingUrl, data.gtmOnSuccess, data.gtmOnFailure, 'clarity');
@@ -651,8 +694,60 @@ ___WEB_PERMISSIONS___
                     "boolean": false
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
               }
             ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "logging",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "environments",
+          "value": {
+            "type": 1,
+            "string": "all"
           }
         }
       ]

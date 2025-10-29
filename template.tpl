@@ -371,7 +371,7 @@ const isConsentGranted = require('isConsentGranted');
 const addConsentListener = require('addConsentListener');
 
 const log = require('logToConsole');
-log("data", data);
+//log("data", data);
 
 const addCustomEvents = data.add_custom_events;
 const addCustomTags = data.add_custom_tags;
@@ -416,7 +416,6 @@ if (consent) {
   const hasCustomConsent = data.has_custom_consent;
   const optionConsent = data.menu_cookies;
   if(optionConsent === 'has_custom_cookie_variable') {
-    log("consentv2_manual","publi:",data.ad_storage,"analitica",data.analytics_storage);
     clarity('consentv2', { 
       ad_Storage: data.ad_storage, 
       analytics_Storage: data.analytics_storage 
@@ -425,8 +424,6 @@ if (consent) {
   else {
     // Usar arrow function
     const updateClarityConsent = () => {
-      log("consentv2_auto","publi:",isConsentGranted('ad_storage'),"analitica",isConsentGranted('analytics_storage'));
-
       clarity('consentv2', {
         ad_Storage: isConsentGranted('ad_storage') ? 'granted' : 'denied',
         analytics_Storage: isConsentGranted('analytics_storage') ? 'granted' : 'denied'
@@ -747,7 +744,7 @@ ___WEB_PERMISSIONS___
           "key": "environments",
           "value": {
             "type": 1,
-            "string": "all"
+            "string": "debug"
           }
         }
       ]
